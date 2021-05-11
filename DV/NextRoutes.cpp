@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-11 20:33:09
+ * @LastEditTime: 2021-05-11 20:59:48
  */
 #include "NextRoutes.h"
 
@@ -14,13 +14,13 @@ void NextRouters::update(Message message)
     {
         for (int i = 0; i < next_routers_.size(); i++)
         {
-            if (next_routers_[i].ip_addr == message.source_ip_addr)
+            if (next_routers_[i].ip_addr.S_un.S_addr == message.source_ip_addr.S_un.S_addr)
             {
                 bool find_flag = false;
                 DistanceVectorTable &curr_vector = next_routers_[i].distance_vecor_table;
                 for (int j = 0; j < curr_vector.size(); j++)
                 {
-                    if (curr_vector[j].ip_addr == message.dest_ip_addr)
+                    if (curr_vector[j].ip_addr.S_un.S_addr == message.dest_ip_addr.S_un.S_addr)
                     {
                         find_flag = true;
                         next_routers_[i].is_changed = true;
@@ -44,7 +44,7 @@ void NextRouters::push(NextRouter next_router)
 {
     next_router.last_update_time = time(NULL);
     next_router.valid = true;
-    is_changed = false;
+    next_router.is_changed = false;
     next_routers_.push_back(next_router);
 }
 
@@ -53,7 +53,7 @@ void NextRouters::push(struct in_addr _ip_addr, u_short _port, int _link_cost)
     NextRouter next_router;
     next_router.last_update_time = time(NULL);
     next_router.valid = true;
-    is_changed = false;
+    next_router.is_changed = false;
     next_router.ip_addr = _ip_addr;
     next_router.port = _port;
     next_router.link_cost = _link_cost;

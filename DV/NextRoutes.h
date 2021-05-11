@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-11 20:33:01
+ * @LastEditTime: 2021-05-11 20:55:44
  * @Description: the list of all the next hop routers
  */
 #ifndef _NEXTROUTES_H_
@@ -45,8 +45,8 @@ public:
         DistanceVectorTable distance_vecor_table;
         NextRouter()
         {
-            next_router.last_update_time = time(NULL);
-            next_router.valid = true;
+            last_update_time = time(NULL);
+            valid = true;
             is_changed = false;
         }
     } ValueType;
