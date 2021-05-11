@@ -1,3 +1,12 @@
+/*
+ * @Author: HZW ZJM CSS
+ * @Date: 2021-05-11 10:38:21
+ * @LastEditTime: 2021-05-11 20:29:04
+ * @Description: the list of all the next hop routers
+ */
+#ifndef _NEXTROUTES_H_
+#define _NEXTROUTES_H_
+
 #include <iostream>
 #include <windows.h>
 #include <winsock2.h>
@@ -6,33 +15,77 @@
 #include <time.h>
 #include <Message.h>
 using namespace std;
-#ifndef _NEXTROUTES_H_
-#define _NEXTROUTES_H_
 
+//Encapsulate the list of all the next hop routers and the related operations
 class NextRouters
 {
-private:
-    vector<NextRouter> next_routers_;
-
 public:
-    typedef vector<pair<struct in_addr, u_short>> DistanceVector;
+    typedef struct DistanceVector
+    {
+        struct in_addr ip_addr;
+        int distance;
+        DistanceVector(struct in_addr _ip_addr,int _distance)
+        {
+            ip_addr = _ip_addr;
+            distance = _distance;
+        }
+    } DistanceVector;
+
+    typedef vector<DistanceVector> DistanceVectorTable;
+
+    //information of adjacent router
     typedef struct NextRouter
     {
         bool valid;
         time_t last_update_time;
+        bool is_changed;
         struct in_addr ip_addr;
         u_short port;
         int link_cost;
-        DistanceVector distance_vecor;
+        DistanceVectorTable distance_vecor_table;
+        NextRouter()
+        {
+            next_router.last_update_time = time(NULL);
+            next_router.valid = true;
+            is_changed = false;
+        }
     } ValueType;
+
+    /**
+     * @description: update the distance vector table
+     * @param {Message} message
+     * @return {*}
+     * @author:HZW
+     */
     void update(Message message);
+
+    /**
+     * @description: add a new adjacent router
+     * @param {NextRouter} next_router
+     * @return {*}
+     * @author:HZW
+     */
     void push(NextRouter next_router);
-    NextRouter &operator[](int index)
-    {
-        if (index >= 0 && index < next_routers.size())
-            return next_routers_[index];
-        cerr << "NextRouters: out of range" << endl;
-        return *(NextRouter *)NULL;
-    }
+
+    /**
+     * @description: add a new adjacent router
+     * @param {struct in_addr} ip_addr
+     * @param {u_short} port
+     * @param {int} link_cost
+     * @return {*}
+     * @author:HZW
+     */
+    void push(struct in_addr ip_addr, u_short port, int link_cost);
+
+    /**
+     * @description: return a reference to the corresponding position in the table
+     * @param {int} index
+     * @return {NextRouter &}
+     * @author:HZW
+     */
+    NextRouter &operator[](int index);
+
+private:
+    vector<NextRouter> next_routers_;
 };
 #endif
