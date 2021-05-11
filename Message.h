@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-11 19:35:29
+ * @LastEditTime: 2021-05-11 22:19:52
  * @Description:Type of message transmitted
  */
 #ifndef _ROUTETABLE_H_
@@ -36,8 +36,8 @@ struct Message
         ROUTE_CONTROL_MESSAGE
     };
     MessageType message_type;
-    struct in_addr dest_ip_addr;
-    struct in_addr source_ip_addr;
+    long dest_ip_addr;
+    long source_ip_addr;
     u_short dest_port;
     int cost;
     string data;

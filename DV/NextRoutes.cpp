@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-11 20:59:48
+ * @LastEditTime: 2021-05-11 22:19:33
  */
 #include "NextRoutes.h"
 
@@ -14,13 +14,13 @@ void NextRouters::update(Message message)
     {
         for (int i = 0; i < next_routers_.size(); i++)
         {
-            if (next_routers_[i].ip_addr.S_un.S_addr == message.source_ip_addr.S_un.S_addr)
+            if (next_routers_[i].ip_addr == message.source_ip_addr)
             {
                 bool find_flag = false;
                 DistanceVectorTable &curr_vector = next_routers_[i].distance_vecor_table;
                 for (int j = 0; j < curr_vector.size(); j++)
                 {
-                    if (curr_vector[j].ip_addr.S_un.S_addr == message.dest_ip_addr.S_un.S_addr)
+                    if (curr_vector[j].ip_addr == message.dest_ip_addr)
                     {
                         find_flag = true;
                         next_routers_[i].is_changed = true;
@@ -48,7 +48,7 @@ void NextRouters::push(NextRouter next_router)
     next_routers_.push_back(next_router);
 }
 
-void NextRouters::push(struct in_addr _ip_addr, u_short _port, int _link_cost)
+void NextRouters::push(long _ip_addr, u_short _port, int _link_cost)
 {
     NextRouter next_router;
     next_router.last_update_time = time(NULL);

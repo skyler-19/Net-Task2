@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-11 20:55:44
+ * @LastEditTime: 2021-05-11 22:19:02
  * @Description: the list of all the next hop routers
  */
 #ifndef _NEXTROUTES_H_
@@ -22,9 +22,9 @@ class NextRouters
 public:
     typedef struct DistanceVector
     {
-        struct in_addr ip_addr;
+        long ip_addr;
         int distance;
-        DistanceVector(struct in_addr _ip_addr,int _distance)
+        DistanceVector(long _ip_addr,int _distance)
         {
             ip_addr = _ip_addr;
             distance = _distance;
@@ -39,7 +39,7 @@ public:
         bool valid;
         time_t last_update_time;
         bool is_changed;
-        struct in_addr ip_addr;
+        long ip_addr;
         u_short port;
         int link_cost;
         DistanceVectorTable distance_vecor_table;
@@ -69,13 +69,13 @@ public:
 
     /**
      * @description: add a new adjacent router
-     * @param {struct in_addr} ip_addr
+     * @param {long} ip_addr
      * @param {u_short} port
      * @param {int} link_cost
      * @return {*}
      * @author:HZW
      */
-    void push(struct in_addr ip_addr, u_short port, int link_cost);
+    void push(long ip_addr, u_short port, int link_cost);
 
     /**
      * @description: return a reference to the corresponding position in the table
