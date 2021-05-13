@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 20:53:32
- * @LastEditTime: 2021-05-11 22:29:07
+ * @LastEditTime: 2021-05-13 11:01:02
  * @Description: 
  */
 
@@ -9,17 +9,39 @@
 #define _ROUTETABLE_H_
 
 #include <iostream>
-#include <winsock2.h>
 #include <vector>
 using namespace std;
 
-typedef struct RouteTableEntry
+class RouteTable
 {
-    long dest_ip_addr;
-    long next_hop_ip_addr;
-    int cost;
-}RouteTableEntry;
-
-typedef vector<RouteTableEntry> RouteTable;
+public:
+    typedef struct RouteTableEntry
+    {
+        long dest_ip_addr;
+        long next_hop_ip_addr;
+        int cost;
+        RouteTableEntry(long _dest_ip_addr, long _next_hop_ip_addr, int _cost)
+        {
+            dest_ip_addr = _dest_ip_addr;
+            next_hop_ip_addr = _next_hop_ip_addr;
+            cost = _cost;
+        }
+    } RouteTableEntry;
+    void push(long dest_ip_addr, long next_hop_ip_addr, int cost)
+    {
+        RouteTableEntry entry(dest_ip_addr, next_hop_ip_addr, cost);
+        route_table_.push_back(entry);
+    }
+    RouteTableEntry &operator[](int index)
+    {
+        if (index >= 0 && index < route_table_.size())
+            return route_table_[index];
+        cerr << "RouteTable: out of range" << endl;
+        return *(RouteTableEntry *)NULL;
+    }
+    void print();
+private:
+    vector<RouteTableEntry> route_table_;
+};
 
 #endif
