@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-13 09:19:15
+ * @LastEditTime: 2021-05-13 11:06:47
  */
 #include "NextRoutes.h"
 
@@ -34,7 +34,6 @@ bool NextRouters::update(Message message)
                 }
                 if (!find_flag)
                 {
-                    next_routers_[i].is_changed = true;
                     DistanceVector distance_vector(message.dest_ip_addr,message.cost);
                     curr_vector.push_back(distance_vector);
                     is_changed = true;
@@ -50,7 +49,6 @@ void NextRouters::push(NextRouter next_router)
 {
     next_router.last_update_time = time(NULL);
     next_router.valid = true;
-    next_router.is_changed = false;
     next_routers_.push_back(next_router);
 }
 
@@ -59,7 +57,6 @@ void NextRouters::push(long _ip_addr, u_short _port, int _link_cost)
     NextRouter next_router;
     next_router.last_update_time = time(NULL);
     next_router.valid = true;
-    next_router.is_changed = false;
     next_router.ip_addr = _ip_addr;
     next_router.port = _port;
     next_router.link_cost = _link_cost;
@@ -72,4 +69,9 @@ NextRouters::NextRouter &NextRouters::operator[](int index)
         return next_routers_[index];
     cerr << "NextRouters: out of range" << endl;
     return *(NextRouter *)NULL;
+}
+
+int NextRouters::size()
+{
+    return next_routers_.size();
 }

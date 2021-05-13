@@ -1,11 +1,11 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-11 22:19:52
+ * @LastEditTime: 2021-05-13 10:55:03
  * @Description:Type of message transmitted
  */
-#ifndef _ROUTETABLE_H_
-#define _ROUTETABLE_H_
+#ifndef _MESSAGE_H_
+#define _MESSAGE_H_
 
 #include <iostream>
 #include <string>

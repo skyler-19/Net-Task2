@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-13 09:17:08
+ * @LastEditTime: 2021-05-13 11:06:18
  * @Description: the list of all the next hop routers
  */
 #ifndef _NEXTROUTES_H_
@@ -73,6 +73,13 @@ public:
      * @author:HZW
      */
     void push(long ip_addr, u_short port, int link_cost);
+
+    /**
+     * @description: return the number of adjacent router
+     * @param {*}
+     * @return {int }
+     */
+    int size();
 
     /**
      * @description: return a reference to the corresponding position in the table
