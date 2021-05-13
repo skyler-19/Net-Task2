@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 20:53:32
- * @LastEditTime: 2021-05-13 11:01:02
+ * @LastEditTime: 2021-05-13 11:14:19
  * @Description: 
  */
 
@@ -31,6 +31,10 @@ public:
     {
         RouteTableEntry entry(dest_ip_addr, next_hop_ip_addr, cost);
         route_table_.push_back(entry);
+    }
+    int size()
+    {
+        return route_table_.size();
     }
     RouteTableEntry &operator[](int index)
     {
