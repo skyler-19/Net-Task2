@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-11 22:19:02
+ * @LastEditTime: 2021-05-13 09:17:08
  * @Description: the list of all the next hop routers
  */
 #ifndef _NEXTROUTES_H_
@@ -38,7 +38,6 @@ public:
     {
         bool valid;
         time_t last_update_time;
-        bool is_changed;
         long ip_addr;
         u_short port;
         int link_cost;
@@ -47,17 +46,15 @@ public:
         {
             last_update_time = time(NULL);
             valid = true;
-            is_changed = false;
         }
     } ValueType;
 
     /**
-     * @description: update the distance vector table
+     * @description: 
      * @param {Message} message
      * @return {*}
-     * @author:HZW
      */
-    void update(Message message);
+    bool update(Message message);
 
     /**
      * @description: add a new adjacent router

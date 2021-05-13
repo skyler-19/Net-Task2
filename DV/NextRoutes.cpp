@@ -1,15 +1,16 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-11 22:19:33
+ * @LastEditTime: 2021-05-13 09:19:15
  */
 #include "NextRoutes.h"
 
 //find the corresponding router, if the distance vector exist, update its value, 
 //else put it into the distance_vector_table
 //and indicates that the current routing information has changed
-void NextRouters::update(Message message)
+bool NextRouters::update(Message message)
 {
+    bool is_changed = false;
     if (message.message_type == Message::ROUTE_CONTROL_MESSAGE)
     {
         for (int i = 0; i < next_routers_.size(); i++)
@@ -23,7 +24,10 @@ void NextRouters::update(Message message)
                     if (curr_vector[j].ip_addr == message.dest_ip_addr)
                     {
                         find_flag = true;
-                        next_routers_[i].is_changed = true;
+                        if(curr_vector[j].distance == message.cost)
+                        {
+                            is_changed = true;
+                        }
                         curr_vector[j].distance = message.cost;
                         break;
                     }
@@ -33,11 +37,13 @@ void NextRouters::update(Message message)
                     next_routers_[i].is_changed = true;
                     DistanceVector distance_vector(message.dest_ip_addr,message.cost);
                     curr_vector.push_back(distance_vector);
+                    is_changed = true;
                 }
                 break;
             }
         }
     }
+    return is_changed;
 }
 
 void NextRouters::push(NextRouter next_router)
