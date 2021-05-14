@@ -1,7 +1,7 @@
 /*
  * @Author: your name
- * @Date: 2021-05-13 20:14:26
- * @LastEditTime: 2021-05-13 20:15:10
+ * @Date: LEN121-05-13 LEN1:14:26
+ * @LastEditTime: 2021-05-14 21:02:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Net\RouteTable.cpp
@@ -27,18 +27,18 @@ RouteTable::RouteTableEntry &RouteTable::operator[](int index)
 void RouteTable::print()
 {
     cout << "Route Table: " << endl;
-    cout << "Dest Ip Addr\t"
-         << "Next Hop Ip Addr\t"
-         << "Cost" << endl;
-    for (int i = 0; i < 44; i++)
+    cout << std::left << setw(LEN1) << "Dest Ip Addr"
+         << std::left << setw(LEN1) << "Next Hop Ip Addr"
+         << std::left << setw(LEN1) << "Cost" << endl;
+    for (int i = 0; i < 3 * LEN1; i++)
     {
         cout << "-";
     }
     cout << endl;
     for (int i = 0; i < route_table_.size(); i++)
     {
-        cout << inet_ntoa(*((in_addr *)&route_table_[i].dest_ip_addr)) << "\t\t"
-             << inet_ntoa(*((in_addr *)&route_table_[i].next_hop_ip_addr)) << "\t\t"
-             << route_table_[i].cost << endl;
+        cout << std::left << setw(LEN1) << inet_ntoa(*((in_addr *)&route_table_[i].dest_ip_addr))
+             << std::left << setw(LEN1) << inet_ntoa(*((in_addr *)&route_table_[i].next_hop_ip_addr))
+             << std::left << setw(LEN1) << route_table_[i].cost << endl;
     }
 }

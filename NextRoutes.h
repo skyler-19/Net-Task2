@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-14 11:03:39
+ * @LastEditTime: 2021-05-14 20:32:13
  * @Description: the list of all the next hop routers
  */
 #ifndef _NEXTROUTES_H_
@@ -13,7 +13,9 @@
 #include <string>
 #include <vector>
 #include <time.h>
+#include <iomanip>
 #include "Message.h"
+#define LEN2 20
 using namespace std;
 
 //Encapsulate the list of all the next hop routers and the related operations
@@ -103,7 +105,7 @@ public:
      */
     NextRouter &operator[](int index);
 
-    
+    void print();
 
 private:
     vector<NextRouter> next_routers_;

@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 20:53:32
- * @LastEditTime: 2021-05-13 20:16:09
+ * @LastEditTime: 2021-05-14 20:28:17
  * @Description: 
  */
 
@@ -11,8 +11,9 @@
 #include <iostream>
 #include <vector>
 #include <winsock2.h>
+#include <iomanip>
 using namespace std;
-
+#define LEN1 20
 class RouteTable
 {
 public:

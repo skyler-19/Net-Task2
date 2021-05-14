@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-14 16:21:06
- * @LastEditTime: 2021-05-14 18:13:27
+ * @LastEditTime: 2021-05-14 21:40:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Net\Router.cpp
@@ -16,65 +16,63 @@
  */
 #include "Router.h"
 
-DWORD WINAPI Router::control(LPVOID lpParam)
+void Router::run()
 {
-    Router* self  = (Router*)lpParam;
-    DWORD ThrdID;
-    self->timer_thread_ = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)timer, (void *)self, 0, &ThrdID);
-    while(1)
+    broadcast();
+    cout << "broadcast" << endl;
+    while (1)
     {
-        Message message = self->recv_message_and_update();
-        if(message.message_type == Message::DATA_MESSAGE)
+        Message message = recv_message_and_update();
+        if (message.message_type == Message::DATA_MESSAGE)
         {
-            if(message.dest_ip_addr == self->local_ip_addr)
+            if (message.dest_ip_addr == local_ip_addr)
             {
-                cout << "Data from " << inet_ntoa(*(in_addr*)&message.source_ip_addr) << " : ";
+                cout << "Data from " << inet_ntoa(*(in_addr *)&message.source_ip_addr) << " : ";
                 cout << message.data << endl;
             }
             else
             {
-                self->send_data_message(message);
+                send_data_message(message);
             }
         }
-        else//Control Message
+        else //Control Message
         {
-            if(self->algorithm == Router::DV &&self->update_net_state(message) && self->update_route_table())
+            if (algorithm == Router::DV && update_net_state(message) && update_route_table())
             {
-                self->broadcast();
+                broadcast();
             }
         }
     }
 }
 
-DWORD WINAPI Router::timer(LPVOID lpParam)
+void Router::timer()
 {
-    Router* self = (Router*)lpParam;
     time_t time_init = time(NULL); //initial time: to decide the time to send update message(30s)
     while (1)
     {
-        //Timeout detection 
-        for (int i = 0; i < self->my_next_routers.size(); i++)
+        //Timeout detection
+        for (int i = 0; i < my_next_routers.size(); i++)
         {
             time_t time_now = time(NULL);
-            time_t time_last = self->my_next_routers[i].last_update_time;
+            time_t time_last = my_next_routers[i].last_update_time;
             if ((time_now - time_last) > EXPIRATION_TIME)
             {
-                self->my_next_routers.erase(i); 
-                self->update_route_table();
-                self->broadcast();
+                my_next_routers.erase(i);
+                update_route_table();
+                broadcast();
             }
             else if ((time_now - time_last) > POSSIBLE_FAILURE_TIME)
             {
-                self->my_next_routers[i].link_cost = INFINITE;
-                self->update_route_table();
-                self->broadcast();
+                my_next_routers[i].link_cost = INFINITE;
+                update_route_table();
+                broadcast();
             }
         }
         //Send routing control information periodically
         time_t time_now = time(NULL);
         if ((time_now - time_init) % CYCLE == 0)
         {
-            self->broadcast();
+            broadcast();
         }
         Sleep(SECOND);
     }
@@ -163,14 +161,14 @@ void Router::send_data_message(Message message)
     {
         long next_hop_ip_addr;
         u_short next_hop_port;
-        find_next_hop(message.dest_ip_addr,next_hop_ip_addr,next_hop_port);
-        send_message(send_socket,next_hop_ip_addr,next_hop_port,message);
+        find_next_hop(message.dest_ip_addr, next_hop_ip_addr, next_hop_port);
+        send_message(send_socket, next_hop_ip_addr, next_hop_port, message);
     }
 }
 Message Router::recv_message_and_update()
 {
     long ip_addr;
-    Message message = recv_message(recv_socket,ip_addr);
+    Message message = recv_message(recv_socket, ip_addr);
     update_time(ip_addr);
     return message;
 }
@@ -183,4 +181,14 @@ void Router::broadcast_control_message(Message message)
         u_short dest_port = my_next_routers[i].port;
         send_message(send_socket, dest_ip_addr, dest_port, message);
     }
+}
+
+void Router::show_route_table()
+{
+    my_route_table.print();
+}
+
+void Router::show_next_routers()
+{
+    my_next_routers.print();
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 22:46:35
- * @LastEditTime: 2021-05-14 18:06:24
+ * @LastEditTime: 2021-05-14 20:18:28
  * @Description: 
  */
 #include <iostream>
@@ -21,12 +21,11 @@ using namespace std;
 #define POSSIBLE_FAILURE_TIME 60
 #define EXPIRATION_TIME 90
 #define SECOND 1000
+
+
 //Abstract router
 class Router
 {
-private:
-    Router *self;
-
 public:
     enum ALGORITHM_TYPE
     {
@@ -39,39 +38,27 @@ public:
     long local_ip_addr;
     SOCKET recv_socket;
     SOCKET send_socket;
-    HANDLE control_thread_;
-    HANDLE timer_thread_;
 
-    void initial(ALGORITHM_TYPE _algorithm,long _local_ip_addr)
+    void initial()
     {
-        algorithm = _algorithm;
-        local_ip_addr = _local_ip_addr;
-        self = this;
         WSA_initialization();
         SOCKET recv_socket = create_recv_socket();
         SOCKET send_socket = create_send_socket();
-        broadcast();
     }
+
     /**
-     * @description: run the control thread
-     * @param {Router*}
+     * @description: start routing(receiving, forwarding, sending)
+     * @param {*}
      * @return {*}
      */
-    static DWORD WINAPI control(LPVOID lpParam);
-
-    //create control thread and run
-    void run()
-    {
-        DWORD ThrdID; //thread ID
-        control_thread_ = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)control, (void *)self, 0, &ThrdID);
-    }
+    void run();
 
     /**
      * @description: Timeout detection and send routing information periodically
-     * @param {Rouer*} lpParam
+     * @param {*}
      * @return {*}
      */
-    static DWORD WINAPI timer(LPVOID lpParam);
+    void timer();
 
     /**
      * @description: In DV, net_state is the next_routers,
@@ -126,6 +113,16 @@ public:
      * @return {*}
      */
     void broadcast_control_message(Message message);
+
+    void add(long ip_addr,u_short port,int cost)
+    {
+        my_next_routers.push(ip_addr,port,cost);
+        my_route_table.push(ip_addr,ip_addr,cost);
+    }
+
+    void show_route_table();
+    
+    void show_next_routers();
 };
 
 #endif
