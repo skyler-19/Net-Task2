@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-13 10:55:03
+ * @LastEditTime: 2021-05-14 10:50:17
  * @Description:Type of message transmitted
  */
 #ifndef _MESSAGE_H_
@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include <winsock2.h>
+#define DATA_SIZE 256
 using namespace std;
 
 //the type of message
@@ -38,9 +39,15 @@ struct Message
     MessageType message_type;
     long dest_ip_addr;
     long source_ip_addr;
-    u_short dest_port;
     int cost;
-    string data;
+    char data[DATA_SIZE];
+    Message operator=(const Message& message)
+    {
+        dest_ip_addr = message.dest_ip_addr;
+        source_ip_addr = message.source_ip_addr;
+        cost = message.cost;
+        memcpy(data,(const char*)message.data,sizeof(data));
+    }
 };
 
 #endif

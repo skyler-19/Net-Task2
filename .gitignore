@@ -2,3 +2,5 @@
 .vscode/launch.json
 .vscode/tasks.json
 .vscode/settings.json
+test.cpp
+test.exe

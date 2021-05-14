@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 22:46:35
- * @LastEditTime: 2021-05-13 10:49:49
+ * @LastEditTime: 2021-05-13 20:38:33
  * @Description: 
  */
 
@@ -35,8 +35,6 @@ public:
      * @return {bool } return true if route table is changed
      */
     bool update_route_table();
-private:
-    NextRouters my_next_routers_;
 };
 
 

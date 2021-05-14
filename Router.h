@@ -1,32 +1,41 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 22:46:35
- * @LastEditTime: 2021-05-13 11:01:18
+ * @LastEditTime: 2021-05-14 10:16:35
  * @Description: 
  */
 #include <iostream>
 #include <vector>
 #include <string>
+#include <winsock2.h>
+#include <windows.h>
 #include "Message.h"
 #include "RouteTable.h"
+#include "NextRoutes.h"
+#include "Socket.h"
 using namespace std;
 
 #ifndef _ROUTER_H_
 #define _ROUTER_H_
-
+#define CYCLE 30
+#define POSSIBLE_FAILURE_TIME 60
+#define EXPIRATION_TIME 90
+#define SECOND 1000
 //Abstract router 
 class Router
 {
 private:
     HANDLE control_thread_;
+    HANDLE timer_thread_;
 public:
-    RouteTable my_route_table_;
     /**
      * @description: run the control thread
      * @param {*}
      * @return {*}
      */
-    virtual void Run() = 0;
+    DWORD WINAPI Run(LPVOID lpParam);
+
+    DWORD WINAPI Timer(LPVOID lpParam);
 
     /**
      * @description: In DV, net_state is the next_routers,
@@ -42,6 +51,7 @@ public:
      * @return {bool } return true if route table is changed
      */
     virtual bool update_route_table() = 0;
+
 };
 
 
