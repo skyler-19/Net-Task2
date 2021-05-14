@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-13 20:06:47
- * @LastEditTime: 2021-05-14 15:56:47
+ * @LastEditTime: 2021-05-14 21:58:15
  * @FilePath: \Net\main.cpp
  */
 #include <iostream>
@@ -12,54 +12,93 @@
 #include <cstring>
 #include <windows.h>
 #include <cmath>
-#include "Message.h"
-#include "NextRoutes.h"
-#include "RouteTable.h"
+#include "Router.h"
+#define HEADER "Router-> "
+#define LEN 20
 using namespace std;
 
-NextRouters my_next_routers;
-RouteTable my_route_table;
-bool run;
-
-
-int main(){
-    run = false;
-    
-    //Input the initial my_next_routers information
-    cout << "Initialization..." << endl;
-    //Message initial_message; 
-    string my_name;     // This router's name
-    cout << "Input the router name: ";
-    cin >> my_name;
-    getchar();
-
-    //cmd format: next_ip_addr next_port link_cost 
-    long next_ip_addr; 
-    u_short next_port; 
-    int link_cost;  
-    int cnt=0;
-    while(true){
-        cout << "Router " << my_name << ">";
-        string cmdin; //next_ip_addr or end;
-        getline(cin, cmdin);
-        if(cmdin == "exit"){
-            cout << "Initialization finished!" << endl;
-            break;
-        }
-        istringstream is(cmdin);
-        string s;
-        is >> s;
-        next_ip_addr = inet_addr((char*)s.c_str());
-        is >> s;
-        next_port = atoi((char*)s.c_str());
-        is >> s;
-        link_cost = atoi((char*)s.c_str());
-        my_next_routers.push(next_ip_addr, next_port, link_cost);
-        my_route_table.push(next_ip_addr, next_ip_addr, link_cost);
-        
-    }
-    my_route_table.print();
-    //WSA initiallization
-
+/**
+ * @description: run the router
+ * @param {Router*} lpParam
+ * @return {*}
+ */
+DWORD WINAPI run(LPVOID lpParam)
+{
+    Router *router_ptr = (Router *)lpParam;
+    router_ptr->run();
 }
 
+/**
+ * @description: run the timer
+ * @param {Rouer*} lpParam
+ * @return {*}
+ */
+DWORD WINAPI timer(LPVOID lpParam)
+{
+    Router *router_ptr = (Router *)lpParam;
+    router_ptr->timer();
+}
+
+int main()
+{
+    Router *router = new Router();
+    router->initial();
+
+    //Input the initial my_next_routers information
+    cout << "Initialization:" << endl;
+    //input ip
+    string str_local_ip_addr;
+    cout << "Local IP address: ";
+    cin >> str_local_ip_addr;
+    router->local_ip_addr = inet_addr(str_local_ip_addr.c_str());
+    //input algorithm
+    cout << "Routing Algorithm(DV//LS): ";
+    string str_algorithm;
+    cin >> str_algorithm;
+    if (str_algorithm == "DV")
+        router->algorithm = Router::DV;
+    else if (str_algorithm == "LS")
+        router->algorithm = Router::LS;
+    else
+    {
+        cout << "Invalid Type" << endl;
+        return 0;
+    }
+    //cmd
+    string command;
+    while (1)
+    {
+        cout << HEADER;
+        cin >> command;
+        if (command == "ADD" || command == "add")
+        {
+            string str_ip_addr;
+            u_short port;
+            int cost;
+            cin >> str_ip_addr >> port >> cost;
+            router->add(inet_addr(str_ip_addr.c_str()), port, cost);
+        }
+        else if (command == "Run" || command == "run")
+        {
+            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)run,(void*)router, 0, NULL);
+            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)timer,(void*)router, 0, NULL);
+        }
+        else if(command == "show")
+        {
+            string str;
+            getline(cin,str);
+            if(str == " route table")
+            {
+                router->show_route_table();
+            }
+            else if(str == " next router")
+            {
+                router->show_next_routers();
+            }
+        }
+        else if(command == "exit")
+        {
+            break;
+        }
+    }
+}
