@@ -1,3 +1,9 @@
+/*
+ * @Author: your name
+ * @Date: 2021-05-13 20:06:47
+ * @LastEditTime: 2021-05-14 15:56:47
+ * @FilePath: \Net\main.cpp
+ */
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
@@ -9,15 +15,16 @@
 #include "Message.h"
 #include "NextRoutes.h"
 #include "RouteTable.h"
-
-#pragma comment(lib,"Ws2_32.lib ")
 using namespace std;
 
 NextRouters my_next_routers;
 RouteTable my_route_table;
+bool run;
 
 
 int main(){
+    run = false;
+    
     //Input the initial my_next_routers information
     cout << "Initialization..." << endl;
     //Message initial_message; 

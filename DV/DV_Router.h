@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 22:46:35
- * @LastEditTime: 2021-05-13 20:38:33
+ * @LastEditTime: 2021-05-14 16:11:51
  * @Description: 
  */
 
@@ -20,7 +20,9 @@ public:
      * @param {*}
      * @return {*}
      */
-    void Run();
+    DWORD WINAPI Run(LPVOID lpParam);
+
+    DWORD WINAPI Timer(LPVOID lpParam);
 
     /**
      * @description: net_state is the next_routers,
@@ -35,6 +37,13 @@ public:
      * @return {bool } return true if route table is changed
      */
     bool update_route_table();
+
+        /**
+     * @description: broadcast control message(routetable)
+     * @param {*}
+     * @return {*}
+     */
+    void broadcast(SOCKET send_socket);
 };
 
 

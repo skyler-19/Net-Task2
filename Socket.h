@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-13 20:18:57
- * @LastEditTime: 2021-05-14 10:38:57
+ * @LastEditTime: 2021-05-14 18:07:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \Net\Socket.h
@@ -28,18 +28,10 @@ SOCKET create_recv_socket();
 //create a thread to send message
 SOCKET create_send_socket();
 
-//According to the destination ip, look up the routing table,
-//find the ip of the next hop, then look up x, get the port number, 
-//and send it to the next hop
-void send_data_message(SOCKET socket, Message message); 
-
-//send control message to a next hop router
-void send_control_message(SOCKET sockst, long dest_ip_addr,u_short port, Message message); 
-
-//send control message to all the next hop routers
-void broadcast_control_message(SOCKET sockst, Message message);
+//send message to a next hop router
+void send_message(SOCKET sockst, long dest_ip_addr,u_short port, Message message); 
 
 //recv data message or control message from the socket
-Message recv_message(SOCKET recv_socket);
+Message recv_message(SOCKET recv_socket,long &from_ip_addr);
 
 #endif
