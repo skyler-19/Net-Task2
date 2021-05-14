@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-13 11:06:47
+ * @LastEditTime: 2021-05-14 11:06:59
  */
 #include "NextRoutes.h"
 
@@ -45,10 +45,22 @@ bool NextRouters::update(Message message)
     return is_changed;
 }
 
+void NextRouters::update_time(long ip_addr)
+{
+    for(int i = 0;i < next_routers_.size();i++)
+    {
+        if(next_routers_[i].ip_addr == ip_addr)
+        {
+            next_routers_[i].last_update_time = time(NULL);
+            break;
+        }
+    }
+}
+
 void NextRouters::push(NextRouter next_router)
 {
     next_router.last_update_time = time(NULL);
-    next_router.valid = true;
+    //next_router.valid = true;
     next_routers_.push_back(next_router);
 }
 
@@ -56,12 +68,23 @@ void NextRouters::push(long _ip_addr, u_short _port, int _link_cost)
 {
     NextRouter next_router;
     next_router.last_update_time = time(NULL);
-    next_router.valid = true;
+    //next_router.valid = true;
     next_router.ip_addr = _ip_addr;
     next_router.port = _port;
     next_router.link_cost = _link_cost;
     next_routers_.push_back(next_router);
 }
+
+void NextRouters::erase(int index)
+{
+    if (index >= 0 && index < next_routers_.size())
+    {
+        vector<NextRouter>::iterator it = next_routers_.begin();
+        it += index;
+        next_routers_.erase(it);
+    }
+}
+
 
 NextRouters::NextRouter &NextRouters::operator[](int index)
 {

@@ -1,7 +1,7 @@
 /*
  * @Author: HZW ZJM CSS
  * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-13 14:13:04
+ * @LastEditTime: 2021-05-14 11:03:39
  * @Description: the list of all the next hop routers
  */
 #ifndef _NEXTROUTES_H_
@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <time.h>
-#include "../Message.h"
+#include "Message.h"
 using namespace std;
 
 //Encapsulate the list of all the next hop routers and the related operations
@@ -36,7 +36,7 @@ public:
     //information of adjacent router
     typedef struct NextRouter
     {
-        bool valid;
+        //bool valid;
         time_t last_update_time;
         long ip_addr;
         u_short port;
@@ -45,16 +45,23 @@ public:
         NextRouter()
         {
             last_update_time = time(NULL);
-            valid = true;
+            //valid = true;
         }
     } ValueType;
 
     /**
-     * @description: 
+     * @description: update the distance vector table of next routes
      * @param {Message} message
-     * @return {*}
+     * @return {bool} return true if distance vector is changed
      */
     bool update(Message message);
+
+    /**
+     * @description: update a adjacent router's last update time
+     * @param {long} ip_addr
+     * @return {*}
+     */
+    void update_time(long ip_addr);
 
     /**
      * @description: add a new adjacent router
@@ -75,6 +82,13 @@ public:
     void push(long ip_addr, u_short port, int link_cost);
 
     /**
+     * @description: erase the corresponding router information
+     * @param {int} index
+     * @return {*}
+     */
+    void erase(int index);
+
+    /**
      * @description: return the number of adjacent router
      * @param {*}
      * @return {int }
@@ -88,6 +102,8 @@ public:
      * @author:HZW
      */
     NextRouter &operator[](int index);
+
+    
 
 private:
     vector<NextRouter> next_routers_;
