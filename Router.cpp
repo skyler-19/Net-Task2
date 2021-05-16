@@ -3,7 +3,6 @@
 void Router::run()
 {
     broadcast();
-    cout << "broadcast" << endl;
     while (1)
     {
         Message message = recv_message_and_update();
@@ -110,6 +109,7 @@ void Router::broadcast()
 {
     for (int i = 0; i < my_route_table.size(); i++)
     {
+        //cout << "route table" << i << endl;
         Message message;
         message.message_type = Message::ROUTE_CONTROL_MESSAGE;
         message.source_ip_addr = local_ip_addr;
@@ -161,6 +161,7 @@ void Router::broadcast_control_message(Message message)
 {
     for (int i = 0; i < my_next_routers.size(); i++)
     {
+        //cout << "next route" << i << endl;
         long dest_ip_addr = my_next_routers[i].ip_addr;
         u_short dest_port = my_next_routers[i].port;
         send_message(send_socket, dest_ip_addr, dest_port, message);
