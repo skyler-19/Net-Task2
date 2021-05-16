@@ -21,7 +21,7 @@ SOCKET create_recv_socket()
     local_addr.sin_family = AF_INET;
     local_addr.sin_port = htons(RECV_PORT);
     local_addr.sin_addr.S_un.S_addr = INADDR_ANY;
-    bind(recv_socket, (sockaddr *)&local_addr, sizeof local_addr);
+    bind(recv_socket, (sockaddr *)&local_addr, sizeof(local_addr));
     return recv_socket;
 }
 
