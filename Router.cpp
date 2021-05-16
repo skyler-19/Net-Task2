@@ -7,16 +7,17 @@ void Router::run()
     {
         Message message = recv_message_and_update();
         cout << endl;
-        cout << "message type: " << message.message_type <<endl;
-        cout << "message source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) <<endl;
-        cout << "message dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) <<endl;
-        cout << "message cost: " << message.cost <<endl;
-        cout << "message data: " << message.data <<endl;
+        cout << "message type: " << message.message_type << endl;
+        cout << "message source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) << endl;
+        cout << "message dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) << endl;
+        cout << "message cost: " << message.cost << endl;
+        cout << "message data: " << message.data << endl;
         if (message.message_type == Message::DATA_MESSAGE)
         {
             if (message.dest_ip_addr == local_ip_addr)
             {
-                cout << endl << "Data from " << inet_ntoa(*(in_addr *)&message.source_ip_addr) << " : ";
+                cout << endl
+                     << "Data from " << inet_ntoa(*(in_addr *)&message.source_ip_addr) << " : ";
                 cout << message.data << endl;
             }
             else
@@ -26,9 +27,12 @@ void Router::run()
         }
         else //Control Message
         {
-            if (algorithm == Router::DV && message.dest_ip_addr == local_ip_addr &&update_net_state(message) && update_route_table())
+            if (message.dest_ip_addr != local_ip_addr)
             {
-                broadcast();
+                if (algorithm == Router::DV && update_net_state(message) && update_route_table())
+                {
+                    broadcast();
+                }
             }
         }
     }
@@ -122,7 +126,8 @@ void Router::broadcast()
         message.dest_ip_addr = my_route_table[i].dest_ip_addr;
         message.cost = my_route_table[i].cost;
         message.data[0] = '\0';
-        broadcast_control_message(message);
+        //broadcast_control_message(message);
+        broadcast_control_message(message ,my_route_table[i].next_hop_ip_addr);
     }
 }
 
@@ -172,6 +177,17 @@ void Router::broadcast_control_message(Message message)
         long dest_ip_addr = my_next_routers[i].ip_addr;
         u_short dest_port = my_next_routers[i].port;
         send_message(send_socket, dest_ip_addr, dest_port, message);
+    }
+}
+
+void Router::broadcast_control_message(Message message,long next_hop_ip_addr)
+{
+    for (int i = 0; i < my_next_routers.size(); i++)
+    {
+        long dest_ip_addr = my_next_routers[i].ip_addr;
+        u_short dest_port = my_next_routers[i].port;
+        if(dest_ip_addr != next_hop_ip_addr)
+            send_message(send_socket, dest_ip_addr, dest_port, message);
     }
 }
 

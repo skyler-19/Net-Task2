@@ -75,7 +75,7 @@ int main()
         else if (command == "Run" || command == "run")
         {
             CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)run, (void *)router, 0, NULL);
-            //CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)timer,(void*)router, 0, NULL);
+            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)timer,(void*)router, 0, NULL);
         }
         else if (command == "show")
         {
