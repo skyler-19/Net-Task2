@@ -31,7 +31,7 @@ void Router::run()
             {
                 if (algorithm == Router::DV && update_net_state(message) && update_route_table())
                 {
-                    broadcast();
+                    broadcast_split();
                 }
             }
         }
@@ -52,20 +52,20 @@ void Router::timer()
             {
                 my_next_routers.erase(i);
                 update_route_table();
-                broadcast();
+                broadcast_split();
             }
             else if ((time_now - time_last) > POSSIBLE_FAILURE_TIME)
             {
                 my_next_routers[i].link_cost = INFINITE;
                 update_route_table();
-                broadcast();
+                broadcast_split();
             }
         }
         //Send routing control information periodically
         time_t time_now = time(NULL);
         if ((time_now - time_init) % CYCLE == 0)
         {
-            broadcast();
+            broadcast_split();
         }
         Sleep(SECOND);
     }
@@ -126,7 +126,21 @@ void Router::broadcast()
         message.dest_ip_addr = my_route_table[i].dest_ip_addr;
         message.cost = my_route_table[i].cost;
         message.data[0] = '\0';
-        //broadcast_control_message(message);
+        broadcast_control_message(message);
+    }
+}
+
+void Router::broadcast_split()
+{
+    for (int i = 0; i < my_route_table.size(); i++)
+    {
+        //cout << "route table" << i << endl;
+        Message message;
+        message.message_type = Message::ROUTE_CONTROL_MESSAGE;
+        message.source_ip_addr = local_ip_addr;
+        message.dest_ip_addr = my_route_table[i].dest_ip_addr;
+        message.cost = my_route_table[i].cost;
+        message.data[0] = '\0';
         broadcast_control_message(message ,my_route_table[i].next_hop_ip_addr);
     }
 }
