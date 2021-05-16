@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-05-13 20:18:57
- * @LastEditTime: 2021-05-14 18:07:56
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \Net\Socket.h
- */
 #ifndef _SOCKET_H_
 #define _SOCKET_H_
 #include <winsock2.h>

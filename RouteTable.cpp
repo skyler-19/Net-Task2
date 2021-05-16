@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: LEN121-05-13 LEN1:14:26
- * @LastEditTime: 2021-05-14 21:02:24
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \Net\RouteTable.cpp
- */
 #include "RouteTable.h"
 
 void RouteTable::push(long dest_ip_addr, long next_hop_ip_addr, int cost)

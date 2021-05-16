@@ -1,9 +1,3 @@
-/*
- * @Author: HZW ZJM CSS
- * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-14 20:32:13
- * @Description: the list of all the next hop routers
- */
 #ifndef _NEXTROUTES_H_
 #define _NEXTROUTES_H_
 

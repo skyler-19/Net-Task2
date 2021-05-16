@@ -1,9 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-05-13 20:06:47
- * @LastEditTime: 2021-05-14 21:58:15
- * @FilePath: \Net\main.cpp
- */
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
