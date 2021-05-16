@@ -88,7 +88,7 @@ public:
      * @param {u_short} next_hop_port
      * @return {*}
      */
-    void find_next_hop(long dest_ip_addr, long &next_hop_ip_addr, u_short next_hop_port);
+    void find_next_hop(long dest_ip_addr, long &next_hop_ip_addr, u_short &next_hop_port);
 
     /**
      * @description: find address and portand send it to the next hop
