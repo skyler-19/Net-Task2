@@ -81,6 +81,8 @@ public:
      */
     void broadcast();
 
+    void broadcast_split();
+
     /**
      * @description: get the next hop router according to the dest ip
      * @param {long} dest_ip_addr
