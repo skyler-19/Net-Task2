@@ -100,6 +100,7 @@ int main()
             message.dest_ip_addr = inet_addr(str.c_str());
             message.cost = 0;
             cin >> str;
+            memset(message.data,0,sizeof(message.data));
             strcpy(message.data, str.c_str());
             router->send_data_message(message);
         }
