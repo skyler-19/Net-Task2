@@ -7,16 +7,17 @@ void Router::run()
     {
         Message message = recv_message_and_update();
         cout << endl;
-        cout << "message type: " << message.message_type <<endl;
-        cout << "message source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) <<endl;
-        cout << "message dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) <<endl;
-        cout << "message cost: " << message.cost <<endl;
-        cout << "message data: " << message.data <<endl;
+        cout << "message type: " << message.message_type << endl;
+        cout << "message source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) << endl;
+        cout << "message dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) << endl;
+        cout << "message cost: " << message.cost << endl;
+        cout << "message data: " << message.data << endl;
         if (message.message_type == Message::DATA_MESSAGE)
         {
             if (message.dest_ip_addr == local_ip_addr)
             {
-                cout << endl << "Data from " << inet_ntoa(*(in_addr *)&message.source_ip_addr) << " : ";
+                cout << endl
+                     << "Data from " << inet_ntoa(*(in_addr *)&message.source_ip_addr) << " : ";
                 cout << message.data << endl;
             }
             else
@@ -26,9 +27,12 @@ void Router::run()
         }
         else //Control Message
         {
-            if (algorithm == Router::DV && message.dest_ip_addr == local_ip_addr &&update_net_state(message) && update_route_table())
+            if (message.dest_ip_addr != local_ip_addr)
             {
-                broadcast();
+                if (algorithm == Router::DV && update_net_state(message) && update_route_table())
+                {
+                    broadcast();
+                }
             }
         }
     }
