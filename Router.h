@@ -36,8 +36,8 @@ public:
     void initial()
     {
         WSA_initialization();
-        SOCKET recv_socket = create_recv_socket();
-        SOCKET send_socket = create_send_socket();
+        recv_socket = create_recv_socket();
+        send_socket = create_send_socket();
     }
 
     /**
