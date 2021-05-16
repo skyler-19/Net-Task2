@@ -74,23 +74,36 @@ int main()
         }
         else if (command == "Run" || command == "run")
         {
-            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)run,(void*)router, 0, NULL);
+            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)run, (void *)router, 0, NULL);
             //CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)timer,(void*)router, 0, NULL);
         }
-        else if(command == "show")
+        else if (command == "show")
         {
             string str;
-            getline(cin,str);
-            if(str == " route table")
+            getline(cin, str);
+            if (str == " route table")
             {
                 router->show_route_table();
             }
-            else if(str == " next router")
+            else if (str == " next router")
             {
                 router->show_next_routers();
             }
         }
-        else if(command == "exit")
+        else if (command == "send")
+        {
+            Message message;
+            string str;
+            cin >> str;
+            message.message_type = Message::DATA_MESSAGE;
+            message.source_ip_addr = router->local_ip_addr;
+            message.dest_ip_addr = inet_addr(str.c_str());
+            message.cost = 0;
+            cin >> str;
+            strcpy(message.data, str.c_str());
+            router->send_data_message(message);
+        }
+        else if (command == "exit")
         {
             break;
         }

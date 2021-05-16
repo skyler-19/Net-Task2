@@ -113,7 +113,7 @@ void NextRouters::print()
         for (int j = 0; j < dv_table.size(); j++)
         {
             cout << std::left << setw(LEN2) << inet_ntoa(*(in_addr *)&dv_table[j].ip_addr);
-            cout << std::left << setw(LEN2) << dv_table[j].ip_addr << endl;
+            cout << std::left << setw(LEN2) << dv_table[j].distance << endl;
         }
         for (int t = 0; t < 2 * LEN2; t++)
             cout << "-";
