@@ -46,7 +46,7 @@ int main()
     cin >> str_local_ip_addr;
     router->local_ip_addr = inet_addr(str_local_ip_addr.c_str());
     //input algorithm
-    cout << "Routing Algorithm(DV//LS): ";
+    cout << "Routing Algorithm(DV/LS): ";
     string str_algorithm;
     cin >> str_algorithm;
     if (str_algorithm == "DV")
@@ -75,7 +75,7 @@ int main()
         else if (command == "Run" || command == "run")
         {
             CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)run,(void*)router, 0, NULL);
-            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)timer,(void*)router, 0, NULL);
+            //CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)timer,(void*)router, 0, NULL);
         }
         else if(command == "show")
         {
