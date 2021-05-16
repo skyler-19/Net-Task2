@@ -1,19 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-05-14 16:21:06
- * @LastEditTime: 2021-05-14 21:40:41
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \Net\Router.cpp
- */
-/*
- * @Author: your name
- * @Date: 2021-05-13 20:22:13
- * @LastEditTime: 2021-05-14 16:10:09
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \Net\Router.cpp
- */
 #include "Router.h"
 
 void Router::run()

@@ -1,9 +1,3 @@
-/*
- * @Author: HZW ZJM CSS
- * @Date: 2021-05-11 10:38:21
- * @LastEditTime: 2021-05-14 10:50:17
- * @Description:Type of message transmitted
- */
 #ifndef _MESSAGE_H_
 #define _MESSAGE_H_
 
