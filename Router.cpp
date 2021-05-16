@@ -26,7 +26,7 @@ void Router::run()
         }
         else //Control Message
         {
-            if (algorithm == Router::DV && update_net_state(message) && update_route_table())
+            if (algorithm == Router::DV && message.dest_ip_addr == local_ip_addr &&update_net_state(message) && update_route_table())
             {
                 broadcast();
             }
@@ -126,7 +126,7 @@ void Router::broadcast()
     }
 }
 
-void Router::find_next_hop(long dest_ip_addr, long &next_hop_ip_addr, u_short next_hop_port)
+void Router::find_next_hop(long dest_ip_addr, long &next_hop_ip_addr, u_short &next_hop_port)
 {
     for (int i = 0; i < my_route_table.size(); i++)
     {
@@ -155,6 +155,7 @@ void Router::send_data_message(Message message)
         send_message(send_socket, next_hop_ip_addr, next_hop_port, message);
     }
 }
+
 Message Router::recv_message_and_update()
 {
     long ip_addr;

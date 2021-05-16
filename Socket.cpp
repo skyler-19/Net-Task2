@@ -51,7 +51,6 @@ Message recv_message(SOCKET recv_socket,long &from_ip_addr)
     memset(buffer, 0, sizeof(buffer));
     struct sockaddr_in from_addr;
     int addr_size = sizeof(from_addr);
-
     int flag = recvfrom(recv_socket, buffer, BUFFER_SIZE, 0, (SOCKADDR *)&from_addr, &addr_size);
     if (flag == SOCKET_ERROR)
         printf("Message recv failed!\nError:\n%d\n", WSAGetLastError());
