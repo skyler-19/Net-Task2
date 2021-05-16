@@ -108,6 +108,9 @@ public:
      */
     void broadcast_control_message(Message message);
 
+    //@description: send control message to all the next hop routers except for the next hop 
+    void broadcast_control_message(Message message,long next_hop_ip_addr);
+
     void add(long ip_addr,u_short port,int cost)
     {
         my_next_routers.push(ip_addr,port,cost);

@@ -126,7 +126,8 @@ void Router::broadcast()
         message.dest_ip_addr = my_route_table[i].dest_ip_addr;
         message.cost = my_route_table[i].cost;
         message.data[0] = '\0';
-        broadcast_control_message(message);
+        //broadcast_control_message(message);
+        broadcast_control_message(message ,my_route_table[i].next_hop_ip_addr);
     }
 }
 
@@ -176,6 +177,17 @@ void Router::broadcast_control_message(Message message)
         long dest_ip_addr = my_next_routers[i].ip_addr;
         u_short dest_port = my_next_routers[i].port;
         send_message(send_socket, dest_ip_addr, dest_port, message);
+    }
+}
+
+void Router::broadcast_control_message(Message message,long next_hop_ip_addr)
+{
+    for (int i = 0; i < my_next_routers.size(); i++)
+    {
+        long dest_ip_addr = my_next_routers[i].ip_addr;
+        u_short dest_port = my_next_routers[i].port;
+        if(dest_ip_addr != next_hop_ip_addr)
+            send_message(send_socket, dest_ip_addr, dest_port, message);
     }
 }
 
