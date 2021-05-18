@@ -9,6 +9,15 @@ int RouteTable::size()
 {
     return route_table_.size();
 }
+void RouteTable::erase(int index)
+{
+    if (index >= 0 && index < route_table_.size())
+    {
+        vector<RouteTableEntry>::iterator it = route_table_.begin();
+        it += index;
+        route_table_.erase(it);
+    }
+}
 RouteTable::RouteTableEntry &RouteTable::operator[](int index)
 {
     if (index >= 0 && index < route_table_.size())
