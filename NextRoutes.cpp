@@ -67,6 +67,8 @@ void NextRouters::push(long _ip_addr, u_short _port, int _link_cost)
     next_router.ip_addr = _ip_addr;
     next_router.port = _port;
     next_router.link_cost = _link_cost;
+    DistanceVector dis_vec(_ip_addr,0);
+    next_router.distance_vecor_table.push_back(dis_vec);
     next_routers_.push_back(next_router);
 }
 

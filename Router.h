@@ -1,3 +1,6 @@
+#ifndef _ROUTER_H_
+#define _ROUTER_H_
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -7,15 +10,13 @@
 #include "RouteTable.h"
 #include "NextRoutes.h"
 #include "Socket.h"
-using namespace std;
-
-#ifndef _ROUTER_H_
-#define _ROUTER_H_
+#include "LinkStateTable.h"
 #define CYCLE 30
 #define POSSIBLE_FAILURE_TIME 60
 #define EXPIRATION_TIME 90
 #define SECOND 1000
-
+#define MAX_DISTANCE 16
+using namespace std;
 
 //Abstract router
 class Router
@@ -68,6 +69,9 @@ public:
      * @return {bool } return true if route table is changed
      */
     bool update_route_table();
+
+    //Remove unreachable items in route table
+    void remove_unreachable_items();
 
     void update_time(long ip_addr)
     {
