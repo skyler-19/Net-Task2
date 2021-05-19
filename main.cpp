@@ -104,6 +104,12 @@ int main()
             strcpy(message.data, str.c_str());
             router->send_data_message(message);
         }
+        else if(command == "delete")
+        {
+            string str_ip_addr;
+            cin >> str_ip_addr;
+            router->delete_next_router(inet_addr(str_ip_addr.c_str()));
+        }
         else if (command == "exit")
         {
             break;

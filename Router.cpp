@@ -2,16 +2,16 @@
 
 void Router::run()
 {
-    broadcast();
+    broadcast_poisoned();
+    //broadcast();
     while (1)
     {
         Message message = recv_message_and_update();
-        cout << endl;
-        cout << "message type: " << message.message_type << endl;
-        cout << "message source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) << endl;
-        cout << "message dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) << endl;
-        cout << "message cost: " << message.cost << endl;
-        cout << "message data: " << message.data << endl;
+        cout << "\n[recv]\t";
+        cout << "type: " << message.message_type << "\t";
+        cout << "source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) << "\t";
+        cout << "dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) << "\t";
+        cout << "cost: " << message.cost << endl;
         if (message.message_type == Message::DATA_MESSAGE)
         {
             if (message.dest_ip_addr == local_ip_addr)
@@ -31,7 +31,14 @@ void Router::run()
             {
                 if (algorithm == Router::DV && update_net_state(message) && update_route_table())
                 {
-                    broadcast_split();
+                    update_route_table();
+                    broadcast_poisoned();
+                    remove_unreachable_items();
+                }
+                else if (algorithm == Router::LS && update_net_state(message))
+                {
+                    broadcast_control_message(message);
+                    update_route_table();
                 }
             }
         }
@@ -48,24 +55,37 @@ void Router::timer()
         {
             time_t time_now = time(NULL);
             time_t time_last = my_next_routers[i].last_update_time;
-            if ((time_now - time_last) > EXPIRATION_TIME)
+            if (my_next_routers[i].link_cost == MAX_DISTANCE && (time_now - time_last) > EXPIRATION_TIME)
             {
                 my_next_routers.erase(i);
-                update_route_table();
-                broadcast_split();
+                if (update_route_table())
+                    broadcast_poisoned();
             }
             else if ((time_now - time_last) > POSSIBLE_FAILURE_TIME)
             {
-                my_next_routers[i].link_cost = INFINITE;
-                update_route_table();
-                broadcast_split();
+                my_next_routers[i].link_cost = MAX_DISTANCE;
+                // Message message;
+                // message.message_type = Message::ROUTE_CONTROL_MESSAGE;
+                // message.source_ip_addr = local_ip_addr;
+                // message.dest_ip_addr = my_next_routers[i].ip_addr;
+                // message.cost = MAX_COST;
+                // my_link_state_table.update(message);
+                if (update_route_table())
+                {
+                    update_route_table();
+                    broadcast_poisoned();
+                    remove_unreachable_items();
+                }
             }
         }
         //Send routing control information periodically
         time_t time_now = time(NULL);
-        if ((time_now - time_init) % CYCLE == 0)
+        if (time_now - time_init > CYCLE)
         {
-            broadcast_split();
+            time_init = time_now;
+            broadcast_poisoned();
+            broadcast_next_router();
+            remove_unreachable_items();
         }
         Sleep(SECOND);
     }
@@ -96,23 +116,56 @@ bool Router::update_route_table()
                 if (curr_dest_ip == my_route_table[t].dest_ip_addr)
                 {
                     is_find = true;
-                    if (curr_router.link_cost + curr_distance < my_route_table[t].cost)
+                    if (my_route_table[t].next_hop_ip_addr == curr_router.ip_addr)
+                    {
+                        if (curr_router.link_cost + curr_distance != my_route_table[t].cost)
+                        {
+                            is_changed = true;
+                            my_route_table[t].cost = curr_router.link_cost + curr_distance;
+                            if (my_route_table[t].cost >= MAX_DISTANCE)
+                            {
+                                my_route_table[t].cost = MAX_DISTANCE;
+                                is_changed = false;
+                            }
+                        }
+                    }
+                    else if (curr_router.link_cost + curr_distance < my_route_table[t].cost)
                     {
                         is_changed = true;
                         my_route_table[t].next_hop_ip_addr = curr_router.ip_addr;
                         my_route_table[t].cost = curr_router.link_cost + curr_distance;
+                        if (my_route_table[t].cost >= MAX_DISTANCE)
+                        {
+                            my_route_table[t].cost = MAX_DISTANCE;
+                            is_changed = false;
+                        }
                     }
                     break;
                 }
             }
-            if (!is_find)
+            if (!is_find && curr_distance + curr_router.link_cost < MAX_DISTANCE)
             {
                 is_changed = true;
                 my_route_table.push(curr_dest_ip, curr_router.ip_addr, curr_router.link_cost + curr_distance);
             }
         }
     }
+    if (is_changed)
+        show_route_table();
     return is_changed;
+}
+void Router::update_time(long ip_addr)
+{
+    my_next_routers.update_time(ip_addr);
+}
+
+void Router::remove_unreachable_items()
+{
+    for (int i = 0; i < my_route_table.size(); i++)
+    {
+        if (my_route_table[i].cost >= MAX_DISTANCE)
+            my_route_table.erase(i);
+    }
 }
 
 void Router::broadcast()
@@ -130,7 +183,7 @@ void Router::broadcast()
     }
 }
 
-void Router::broadcast_split()
+void Router::broadcast_poisoned()
 {
     for (int i = 0; i < my_route_table.size(); i++)
     {
@@ -141,9 +194,22 @@ void Router::broadcast_split()
         message.dest_ip_addr = my_route_table[i].dest_ip_addr;
         message.cost = my_route_table[i].cost;
         message.data[0] = '\0';
-        broadcast_control_message(message ,my_route_table[i].next_hop_ip_addr);
+        broadcast_control_message(message, my_route_table[i].next_hop_ip_addr);
     }
 }
+
+// void Router::broadcast_next_router()
+// {
+//     Message message;
+//     message.message_type = Message::ROUTE_CONTROL_MESSAGE;
+//     message.source_ip_addr = local_ip_addr;
+//     message.dest_ip_addr = local_ip_addr;
+//     message.cost = 0;
+//     for (int i = 0; i < my_next_routers.size(); i++)
+//     {
+//         send_message(send_socket, my_next_routers[i].ip_addr, my_next_routers[i].port, message);
+//     }
+// }
 
 void Router::find_next_hop(long dest_ip_addr, long &next_hop_ip_addr, u_short &next_hop_port)
 {
@@ -162,6 +228,29 @@ void Router::find_next_hop(long dest_ip_addr, long &next_hop_ip_addr, u_short &n
             }
         }
     }
+}
+
+void Router::add(long ip_addr, u_short port, int cost)
+{
+    my_next_routers.push(ip_addr, port, cost);
+    my_route_table.push(ip_addr, ip_addr, cost);
+    my_link_state_table.push(local_ip_addr, ip_addr, cost);
+}
+
+void Router::delete_next_router(long ip_addr)
+{
+    for (int i = 0; i < my_next_routers.size(); i++)
+    {
+        if (my_next_routers[i].ip_addr == ip_addr)
+        {
+            my_next_routers[i].link_cost = MAX_COST;
+            break;
+        }
+    }
+    update_route_table();
+    update_route_table();
+    broadcast_poisoned();
+    remove_unreachable_items();
 }
 
 void Router::send_data_message(Message message)
@@ -194,14 +283,20 @@ void Router::broadcast_control_message(Message message)
     }
 }
 
-void Router::broadcast_control_message(Message message,long next_hop_ip_addr)
+void Router::broadcast_control_message(Message message, long next_hop_ip_addr)
 {
     for (int i = 0; i < my_next_routers.size(); i++)
     {
         long dest_ip_addr = my_next_routers[i].ip_addr;
         u_short dest_port = my_next_routers[i].port;
-        if(dest_ip_addr != next_hop_ip_addr)
+        if (dest_ip_addr != next_hop_ip_addr)
             send_message(send_socket, dest_ip_addr, dest_port, message);
+        else
+        {
+            Message poisoned_reverse_message = message;
+            poisoned_reverse_message.cost = MAX_COST;
+            send_message(send_socket, dest_ip_addr, dest_port, poisoned_reverse_message);
+        }
     }
 }
 

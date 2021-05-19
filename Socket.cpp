@@ -8,7 +8,7 @@ void WSA_initialization()
         cout << "initialization failed " << endl;
     }
 }
-//create a thread to receive message
+
 SOCKET create_recv_socket()
 {
     SOCKET recv_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -25,12 +25,10 @@ SOCKET create_recv_socket()
     return recv_socket;
 }
 
-//create a thread to send message
 SOCKET create_send_socket()
 {
     return socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 }
-
 
 void send_message(SOCKET socket, long dest_ip_addr, u_short dest_port, Message message)
 {
@@ -39,11 +37,16 @@ void send_message(SOCKET socket, long dest_ip_addr, u_short dest_port, Message m
     toAddr.sin_port = htons(dest_port);
     toAddr.sin_addr.s_addr = dest_ip_addr;
     int flag = sendto(socket, (char *)&message, sizeof(message), 0, (SOCKADDR *)&toAddr, sizeof(toAddr));
+    cout << "\n[send]\t";
+    cout << "type: " << message.message_type << "\t";
+    cout << "source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) << "\t";
+    cout << "dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) << "\t";
+    cout << "cost: " << message.cost << endl;
     if (flag == SOCKET_ERROR)
         printf("Message send failed!\nError:\n%d\n", WSAGetLastError());
 }
 
-Message recv_message(SOCKET recv_socket,long &from_ip_addr)
+Message recv_message(SOCKET recv_socket, long &from_ip_addr)
 {
     Message message;
     memset(&message, 0, sizeof(message));

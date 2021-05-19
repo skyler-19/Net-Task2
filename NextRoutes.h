@@ -41,62 +41,28 @@ public:
         NextRouter()
         {
             last_update_time = time(NULL);
-            //valid = true;
         }
     } ValueType;
 
-    /**
-     * @description: update the distance vector table of next routes
-     * @param {Message} message
-     * @return {bool} return true if distance vector is changed
-     */
+    //update the distance vector table of next routes, return true if distance vector is changed
     bool update(Message message);
 
-    /**
-     * @description: update a adjacent router's last update time
-     * @param {long} ip_addr
-     * @return {*}
-     */
+    //update a adjacent router's last update time
     void update_time(long ip_addr);
 
-    /**
-     * @description: add a new adjacent router
-     * @param {NextRouter} next_router
-     * @return {*}
-     * @author:HZW
-     */
+    //add a new adjacent router
     void push(NextRouter next_router);
 
-    /**
-     * @description: add a new adjacent router
-     * @param {long} ip_addr
-     * @param {u_short} port
-     * @param {int} link_cost
-     * @return {*}
-     * @author:HZW
-     */
+    //add a new adjacent router
     void push(long ip_addr, u_short port, int link_cost);
 
-    /**
-     * @description: erase the corresponding router information
-     * @param {int} index
-     * @return {*}
-     */
+    //erase the corresponding router information
     void erase(int index);
 
-    /**
-     * @description: return the number of adjacent router
-     * @param {*}
-     * @return {int }
-     */
+    //return the number of adjacent router
     int size();
 
-    /**
-     * @description: return a reference to the corresponding position in the table
-     * @param {int} index
-     * @return {NextRouter &}
-     * @author:HZW
-     */
+    //return a reference to the corresponding position in the table
     NextRouter &operator[](int index);
 
     void print();
