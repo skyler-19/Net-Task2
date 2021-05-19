@@ -19,11 +19,11 @@ bool NextRouters::update(Message message)
                     if (curr_vector[j].ip_addr == message.dest_ip_addr)
                     {
                         find_flag = true;
-                        if (curr_vector[j].distance == message.cost)
+                        if (curr_vector[j].distance != message.cost)
                         {
+                            curr_vector[j].distance = message.cost;
                             is_changed = true;
                         }
-                        curr_vector[j].distance = message.cost;
                         break;
                     }
                 }
@@ -36,6 +36,10 @@ bool NextRouters::update(Message message)
                 break;
             }
         }
+    }
+    if(is_changed)
+    {
+        print();
     }
     return is_changed;
 }
@@ -55,7 +59,6 @@ void NextRouters::update_time(long ip_addr)
 void NextRouters::push(NextRouter next_router)
 {
     next_router.last_update_time = time(NULL);
-    //next_router.valid = true;
     next_routers_.push_back(next_router);
 }
 
@@ -63,7 +66,6 @@ void NextRouters::push(long _ip_addr, u_short _port, int _link_cost)
 {
     NextRouter next_router;
     next_router.last_update_time = time(NULL);
-    //next_router.valid = true;
     next_router.ip_addr = _ip_addr;
     next_router.port = _port;
     next_router.link_cost = _link_cost;

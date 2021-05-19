@@ -6,6 +6,7 @@
 #include <iomanip>
 #include "Message.h"
 #define LEN3 20
+#define MAX_COST 16
 using namespace std;
 
 //Include all link information (link is undirected)
