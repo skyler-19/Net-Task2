@@ -43,3 +43,8 @@ void RouteTable::print()
              << std::left << setw(LEN1) << route_table_[i].cost << endl;
     }
 }
+
+void RouteTable::clear()
+{
+    route_table_.clear();
+}
