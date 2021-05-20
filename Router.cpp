@@ -7,11 +7,7 @@ void Router::run()
     while (1)
     {
         Message message = recv_message_and_update();
-        cout << "\n[recv]\t";
-        cout << "type: " << message.message_type << "\t";
-        cout << "source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) << "\t";
-        cout << "dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) << "\t";
-        cout << "cost: " << message.cost << endl;
+
         if (message.message_type == Message::DATA_MESSAGE)
         {
             if (message.dest_ip_addr == local_ip_addr)
@@ -84,7 +80,7 @@ void Router::timer()
         {
             time_init = time_now;
             broadcast_poisoned();
-            broadcast_next_router();
+            //broadcast_next_router();
             remove_unreachable_items();
         }
         Sleep(SECOND);
@@ -277,6 +273,7 @@ void Router::broadcast_control_message(Message message)
     for (int i = 0; i < my_next_routers.size(); i++)
     {
         //cout << "next route" << i << endl;
+        if(my_next_routers[i].link_cost >= MAX_COST) continue;
         long dest_ip_addr = my_next_routers[i].ip_addr;
         u_short dest_port = my_next_routers[i].port;
         send_message(send_socket, dest_ip_addr, dest_port, message);
@@ -287,6 +284,7 @@ void Router::broadcast_control_message(Message message, long next_hop_ip_addr)
 {
     for (int i = 0; i < my_next_routers.size(); i++)
     {
+        if(my_next_routers[i].link_cost >= MAX_COST) continue;
         long dest_ip_addr = my_next_routers[i].ip_addr;
         u_short dest_port = my_next_routers[i].port;
         if (dest_ip_addr != next_hop_ip_addr)

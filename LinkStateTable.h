@@ -42,6 +42,16 @@ public:
     //erase a link and the reversed (check if it has been added)
     void erase(long source_ip_addr, long dest_ip_addr);
 
+    int size()
+    {
+        return link_state_table_.size();
+    }
+
+    void clear()
+    {
+        link_state_table_.clear();
+    }
+
     //return true if the link is in the table
     bool is_in_table(long source_ip_addr, long dest_ip_addr);
 
