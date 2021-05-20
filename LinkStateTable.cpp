@@ -1,8 +1,50 @@
 #include "LinkStateTable.h"
 
+
 bool LinkStateTable::update(Message message)
 {
-
+    bool is_changed = false;
+    bool is_find = false;
+    for (auto it = link_state_table_.begin(); it != link_state_table_.end(); it++)
+    {
+        if (it->empty())
+        {
+            link_state_table_.erase(it);
+            continue;
+        }
+        if ((*it)[0].source_ip_addr == message.source_ip_addr)
+        {
+            for (auto j = it->begin(); j != it->end(); j++)
+            {
+                if (j->dest_ip_addr == message.dest_ip_addr && j->cost != message.cost)
+                {
+                    j->cost = message.cost;
+                    is_changed = true;
+                    is_find = true;
+                    break;
+                }
+            }
+        }
+        else if ((*it)[0].source_ip_addr == message.dest_ip_addr)
+        {
+            for (auto j = it->begin(); j != it->end(); j++)
+            {
+                if (j->dest_ip_addr == message.source_ip_addr && j->cost != message.cost)
+                {
+                    j->cost = message.cost;
+                    is_changed = true;
+                    is_find = true;
+                    break;
+                }
+            }
+        }
+    }
+    if(!is_find)
+    {
+        is_changed = true;
+        push(message.source_ip_addr, message.dest_ip_addr, message.cost);
+    }
+    return is_changed;
 }
 
 void LinkStateTable::push(long source_ip_addr, long dest_ip_addr, int cost)

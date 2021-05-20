@@ -27,6 +27,7 @@ public:
     void erase(int index);
     RouteTableEntry &operator[](int index);
     void print();
+    void clear();
 private:
     vector<RouteTableEntry> route_table_;
 };
