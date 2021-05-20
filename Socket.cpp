@@ -37,7 +37,7 @@ void send_message(SOCKET socket, long dest_ip_addr, u_short dest_port, Message m
     toAddr.sin_port = htons(dest_port);
     toAddr.sin_addr.s_addr = dest_ip_addr;
     int flag = sendto(socket, (char *)&message, sizeof(message), 0, (SOCKADDR *)&toAddr, sizeof(toAddr));
-    cout << "\n[send]\t";
+    cout << "\n[send to " << inet_ntoa(*((in_addr *)&dest_ip_addr)) << "]\t";
     cout << "type: " << message.message_type << "\t";
     cout << "source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) << "\t";
     cout << "dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) << "\t";
@@ -59,5 +59,10 @@ Message recv_message(SOCKET recv_socket, long &from_ip_addr)
         printf("Message recv failed!\nError:\n%d\n", WSAGetLastError());
     memcpy((char *)&message, (const char *)buffer, sizeof(message));
     from_ip_addr = from_addr.sin_addr.S_un.S_addr;
+    cout << "\n[recv from " << inet_ntoa(*((in_addr *)&from_ip_addr)) << "]\t";
+    cout << "type: " << message.message_type << "\t";
+    cout << "source ip: " << inet_ntoa(*((in_addr *)&message.source_ip_addr)) << "\t";
+    cout << "dest ip: " << inet_ntoa(*((in_addr *)&message.dest_ip_addr)) << "\t";
+    cout << "cost: " << message.cost << endl;
     return message;
 }
