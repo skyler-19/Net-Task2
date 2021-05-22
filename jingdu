@@ -1,7 +1,0 @@
-ls:
-void run();
-bool update_net_state(Message message);
-bool update_route_table();
-void broadcast();
-
-linkstate update print push erase 
