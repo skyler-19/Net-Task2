@@ -5,10 +5,12 @@ void RouteTable::push(long dest_ip_addr, long next_hop_ip_addr, int cost)
     RouteTableEntry entry(dest_ip_addr, next_hop_ip_addr, cost);
     route_table_.push_back(entry);
 }
+
 int RouteTable::size()
 {
     return route_table_.size();
 }
+
 void RouteTable::erase(int index)
 {
     if (index >= 0 && index < route_table_.size())
@@ -18,6 +20,7 @@ void RouteTable::erase(int index)
         route_table_.erase(it);
     }
 }
+
 RouteTable::RouteTableEntry &RouteTable::operator[](int index)
 {
     if (index >= 0 && index < route_table_.size())
@@ -25,6 +28,7 @@ RouteTable::RouteTableEntry &RouteTable::operator[](int index)
     cerr << "RouteTable: out of range" << endl;
     return *(RouteTableEntry *)NULL;
 }
+
 void RouteTable::print()
 {
     cout << "Route Table: " << endl;

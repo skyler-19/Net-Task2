@@ -22,12 +22,19 @@ public:
             cost = _cost;
         }
     } RouteTableEntry;
+
     void push(long dest_ip_addr, long next_hop_ip_addr, int cost);
+
     int size();
+
     void erase(int index);
+
     RouteTableEntry &operator[](int index);
+
     void print();
+    
     void clear();
+
 private:
     vector<RouteTableEntry> route_table_;
 };

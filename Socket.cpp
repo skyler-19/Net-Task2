@@ -3,7 +3,7 @@
 void WSA_initialization()
 {
     WSADATA wsadata;
-    if (WSAStartup(MAKEWORD(2, 2), &wsadata)) //version 2.2
+    if (WSAStartup(MAKEWORD(2, 2), &wsadata)) //version 2.2 
     {
         cout << "initialization failed " << endl;
     }
