@@ -75,7 +75,7 @@ int main()
         else if (command == "Run" || command == "run")
         {
             CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)run, (void *)router, 0, NULL);
-            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)timer,(void*)router, 0, NULL);
+            CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)timer, (void *)router, 0, NULL);
         }
         else if (command == "show")
         {
@@ -89,6 +89,10 @@ int main()
             {
                 router->show_next_routers();
             }
+            else if (str == " link state")
+            {
+                router->show_link_state();
+            }
         }
         else if (command == "send")
         {
@@ -100,11 +104,11 @@ int main()
             message.dest_ip_addr = inet_addr(str.c_str());
             message.cost = 0;
             cin >> str;
-            memset(message.data,0,sizeof(message.data));
+            memset(message.data, 0, sizeof(message.data));
             strcpy(message.data, str.c_str());
             router->send_data_message(message);
         }
-        else if(command == "delete")
+        else if (command == "delete")
         {
             string str_ip_addr;
             cin >> str_ip_addr;

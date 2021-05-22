@@ -16,6 +16,7 @@
 #define EXPIRATION_TIME 90
 #define SECOND 1000
 #define MAX_DISTANCE 16
+#define INVALID_IP_ADDR 0
 using namespace std;
 
 //Abstract router
@@ -54,7 +55,18 @@ public:
     bool update_net_state(Message message);
 
     //update the route table, return true if route table is changed
-    bool update_route_table();
+    bool update_route_table()
+    {
+        if(algorithm == DV)
+        {
+            return update_route_table_with_DV();
+        }
+        return update_route_table_with_LS();
+    }
+
+    bool update_route_table_with_DV();
+
+    bool update_route_table_with_LS();
 
     //Remove unreachable items in route table
     void remove_unreachable_items();
@@ -64,8 +76,8 @@ public:
     // broadcast control message, in DV is routetable, in LS is linkstate 
     void broadcast();
 
-    //broadcast poisoned reversed message 
-    void broadcast_poisoned();
+    // //broadcast poisoned reversed message 
+    // void broadcast_poisoned();
 
     //get the next hop router according to the dest ip
     void find_next_hop(long dest_ip_addr, long &next_hop_ip_addr, u_short &next_hop_port);
@@ -92,6 +104,9 @@ public:
     void show_route_table();
     
     void show_next_routers();
+
+    void show_link_state();
+    
 };
 
 #endif

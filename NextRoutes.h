@@ -62,7 +62,7 @@ public:
     //return the number of adjacent router
     int size();
 
-    //return a reference to the corresponding position in the table
+    //return a reference to the corresponding position in the table 
     NextRouter &operator[](int index);
 
     void print();

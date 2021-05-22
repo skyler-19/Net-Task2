@@ -43,5 +43,4 @@ struct Message
         memcpy(data,(const char*)message.data,sizeof(data));
     }
 };
-
 #endif

@@ -50,9 +50,15 @@ public:
     //return true if the link is in the table
     bool is_in_table(long source_ip_addr, long dest_ip_addr);
 
+    //return the index of the IP address in the table, return -1 if it is not in the table
+    int get_index(long ip_addr);
+
+    void delete_empty();
+
     vector<LinkState> &operator[](int index);
 
     void print();
+
 private:
     vector<vector<LinkState>> link_state_table_;
 };

@@ -24,7 +24,7 @@ SOCKET create_send_socket();
 //send message to a next hop router
 void send_message(SOCKET sockst, long dest_ip_addr,u_short port, Message message); 
 
-//recv data message or control message from the socket
+//recv data message or control message from the socket 
 Message recv_message(SOCKET recv_socket,long &from_ip_addr);
 
 #endif
