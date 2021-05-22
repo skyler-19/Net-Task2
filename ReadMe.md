@@ -22,4 +22,4 @@
 
 ## 四、实验拓扑
 
-![拓扑](.\data\拓扑.png)
+![拓扑](https://github.com/skyler-19/Net-Task2/blob/master/data/%E6%8B%93%E6%89%91.png)
