@@ -8,17 +8,18 @@
 
 + 系统：window
 + 语言：C++
++ 编译方式：`g++ *.cpp -o [name] -lwsock32`
 
 ## 三、文件结构
 
-### 1. 基础文件
++ Message.h：传输报文类
++ RouteTable.h：路由表类
++ NextRoutes.h：相邻路由器列表类
++ LinkStateTable.h: 链路信息表类
++ Router.h: 路由器类
++ Socket.h: 封装通信函数
++ main.cpp: 模拟命令行窗口，接收指令并初始化
 
-+ Message.h：传输报文
-+ RouteTable.h：路由表
+## 四、实验拓扑
 
-### 2. DV实现
-
-+ NextRoutes.h：相邻路由表列表
-+ NextRoutes.cpp：相邻路由表列表的实现
-
-### 3. LS实现
+![拓扑](.\data\拓扑.png)
